@@ -1,5 +1,8 @@
 version: "3"
 
+vars:
+  FUNCTION_APP_NAME: cwa-ws-prod-redirect-func
+
 tasks:
   test:
     dir: function
@@ -32,8 +35,10 @@ tasks:
     deps: [build]
     dir: function
     cmds:
-      - func azure functionapp publish cwa-ws-prod-redirect-func --custom
+      - func azure functionapp publish {{.FUNCTION_APP_NAME}} --custom
     silent: false
     sources:
       - ./bin/*
+      - host.json
+      - "**/function.json"
     method: checksum
