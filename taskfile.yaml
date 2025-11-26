@@ -1,0 +1,39 @@
+version: "3"
+
+tasks:
+  test:
+    dir: function
+    cmds:
+      - go test ./...
+
+  run-locally:
+    dir: function
+    cmds:
+      - docker compose up {{.CLI_ARGS}}
+    silent: false
+
+  down:
+    dir: function
+    cmds:
+      - docker compose down
+    silent: false
+
+  build:
+    dir: function
+    cmds:
+      - rm -rf ./bin
+      - CGO_ENABLED=0 GOOS="linux" GOARCH="amd64" go build -o ./bin/main ./src/main.go
+    silent: false
+    sources:
+      - "**/*.go"
+    method: checksum
+
+  deploy:
+    deps: [build]
+    dir: function
+    cmds:
+      - func azure functionapp publish cwa-ws-prod-redirect-func --custom
+    silent: false
+    sources:
+      - ./bin/*
+    method: checksum

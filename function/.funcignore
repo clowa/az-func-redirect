@@ -1,0 +1,29 @@
+.git*
+.vscode
+__azurite_db*__.json
+__blobstorage__
+__queuestorage__
+local.settings.json
+test
+
+# App source code
+*.go
+**.go
+go.mod
+go.sum
+
+# Docker files
+Dockerfile
+Dockerfile.*
+.dockerignore
+docker-compose*
+
+# Metadata files
+openapi.yaml
+
+# App tests
+**/tests
+**/testdata
+
+# macOS Finder files
+*.DS_Store
