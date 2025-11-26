@@ -19,5 +19,10 @@
       "arguments": []
     },
     "enableForwardingHttpRequest": true
+  },
+  "extensions": {
+    "http": {
+      "routePrefix": ""
+    }
   }
 }

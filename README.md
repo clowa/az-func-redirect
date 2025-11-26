@@ -12,9 +12,3 @@ This repository contains the and Azure Function used to perform simple URL redir
 ## Docs
 
 Documentation can be found in the [`docs`](./docs/README.md) folder.
-
-## Facts
-
-- Average cold start time of `redirect`: ~ xxx ms
-- Average hot execution time of `redirect`: ~ xxx ms
-- [Hey](https://github.com/rakyll/hey) stats:
