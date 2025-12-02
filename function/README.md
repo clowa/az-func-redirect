@@ -13,8 +13,8 @@ Therefore, the project structure and configuration differ from standard Azure Fu
 
 To listen on the root path:
 
-- `function.json` set the `route` property of the `httpTrigger` binding to `/`
-- `host.json` is configured to set the `routePrefix` to an empty string
+- `function.json` set the `route` property of the `httpTrigger` binding to `/`. This removed the subpath (by defaul `/api/`) from the trigger URL.
+- `host.json` sets the `routePrefix` to `/`. This will make the function listen to the root instead of the function name.
 - The default page is disabled by setting `AzureWebJobsDisableHomepage` to `true` via app settings.
 
 To use a custom handler:
