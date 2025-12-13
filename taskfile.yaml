@@ -37,17 +37,17 @@ tasks:
       - docker compose down
     silent: false
 
-  build:
+  function-build:
     dir: function
     cmds:
       - rm -rf ./bin
-      - CGO_ENABLED=0 GOOS="linux" GOARCH="amd64" go build -o ./bin/main ./src/
+      - CGO_ENABLED=0 GOOS="linux" GOARCH="amd64" go build -o ./bin/main ./src
     silent: false
     sources:
       - "**/*.go"
     method: checksum
 
-  deploy:
+  function-deploy:
     deps: [build]
     dir: function
     cmds:
