@@ -1,11 +1,10 @@
 # syntax=docker/dockerfile:1
 
-ARG ALPINE_VERSION=3.20
 ARG GO_VERSION=1.25
 
 ################################################################################
 # Create a stage for building the application.
-FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
+FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS builder
 WORKDIR /app
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -37,34 +36,15 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 # runtime dependencies for the application. This often uses a different base
 # image from the build stage where the necessary files are copied from the build
 # stage.
-FROM alpine:${ALPINE_VERSION} AS final
+FROM scratch
 
 ARG APP_PORT
 
-# Install any runtime dependencies that are needed to run your application.
-# Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
-RUN --mount=type=cache,target=/var/cache/apk \
-    apk --update add \
-        ca-certificates \
-        curl \
-        && \
-        update-ca-certificates
-
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
+# Copy TLS certificates to allow TLS traffic
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 # Copy the executable from the "build" stage.
-COPY --from=build /bin/main /bin/
+COPY --from=builder /bin/main /bin/
 
 # Expose the port that the application listens on.
 ENV FUNCTIONS_CUSTOMHANDLER_PORT=${APP_PORT}

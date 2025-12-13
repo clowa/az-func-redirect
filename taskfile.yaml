@@ -9,6 +9,22 @@ tasks:
     cmds:
       - go test ./...
 
+  docker-build:
+    dir: function
+    cmds:
+      - container system start
+      - container build -t clowa/az-func-redirect:dev .
+    sources:
+      - "**/*.go"
+    method: checksum
+
+  docker-run:
+    dir: function
+    deps:
+      - docker-build
+    cmds:
+      - container run -p 8080:8080 clowa/az-func-redirect:dev
+
   run-locally:
     dir: function
     cmds:
